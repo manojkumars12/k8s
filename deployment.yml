@@ -17,29 +17,11 @@ spec:
         image: man0jx/k8s
         ports:
         - containerPort: 3000
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: my-secret
-              key: database_url
-        - name: CACHE_SIZE
-          valueFrom:
-            configMapKeyRef:
-              name: ecom-backend-config
-              key: cache_size
-        - name: PAYMENT_GATEWAY_URL
-          valueFrom:
-            configMapKeyRef:
-              name: ecom-backend-config
-              key: payment_gateway_url
-        - name: MAX_CART_ITEMS
-          valueFrom:
-            configMapKeyRef:
-              name: ecom-backend-config
-              key: max_cart_items
-        - name: SESSION_TIMEOUT
-          valueFrom:
-            configMapKeyRef:
-              name: ecom-backend-config
-              key: session_timeout
+        volumeMounts: 
+          - name: my-secret
+            readOnly: true
+            mountPath: "/app/config"
+      volumes:
+      - name: my-secret
+        secret: 
+          secretName: my-secret
