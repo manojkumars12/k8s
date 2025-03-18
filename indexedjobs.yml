@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: example-job2
+spec:
+  completions: 5
+  parallelism: 2
+  completionMode: Indexed
+  template:
+    spec:
+      containers:
+      - name: container
+        image: busybox
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Delivering  pizza order $JOB_COMPLETION_INDEX"
+      restartPolicy: Never
+

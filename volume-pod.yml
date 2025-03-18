@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: emptydir-example
+spec:
+  containers:
+    - name: writer-container
+      image: busybox
+      command: ["/bin/sh", "-c"]
+      args:
+        - while true; do echo "$(date) - Log entry" >> /shared-data/logs.txt; sleep 2; done
+      volumeMounts:
+        - mountPath: "/shared-data"
+          name: shared-storage
+    - name: reader-container
+      image: busybox
+      command: ["/bin/sh", "-c"]
+      args:
+        - tail -f /shared-data/logs.txt
+      volumeMounts:
+        - mountPath: "/shared-data"
+          name: shared-storage
+  volumes:
+    - name: shared-storage
+      emptyDir: {}

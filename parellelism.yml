@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: failure-test-job
+spec:
+  parallelism: 5
+  template:
+    spec:
+      containers:
+      - name: test-container
+        image: busybox
+        command:
+        - /bin/sh
+        - -c
+        - |
+          result=$(shuf -i 0-1 -n 1)  # Randomly pick 0 or 1
+          if [ "$result" -eq 0 ]; then
+            echo "Success!"
+            exit 0
+          else
+            echo "Failure!"
+            exit 1
+          fi
+      restartPolicy: Never
+
